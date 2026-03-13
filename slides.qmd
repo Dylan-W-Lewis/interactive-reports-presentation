@@ -1,0 +1,91 @@
+---
+title: "Modern HTML Reporting in R for Public Health"
+subtitle: "Quarto + bslib + ggiraph workflows"
+author: "Dylan Lewis"
+format:
+  revealjs:
+    theme: [default, simple]
+    slide-number: true
+    toc: false
+    transition: fade
+    incremental: false
+    chalkboard: false
+    code-overflow: wrap
+---
+
+## Context: Reporting Constraints in PHS
+- Shiny often blocked by hosting/governance.
+- Need attractive, lightweight HTML outputs.
+- Maintainability, reproducibility, and accessibility matter.
+
+---
+
+## Dashboards vs Parameterised Reports
+- Not the same thing! <!-- pictures of layout differences -->
+- When to choose a dashboard (explore / monitor live data).
+- When to choose parameterised reports (batching per board/hospital).
+
+---
+
+## Quarto Overview <!-- (for Rmd newcomers) -->
+- What Quarto is and why it replaced R Markdown.
+- Same Markdown feel, modern features, long-term support.
+- Reusable assets (themes, includes, metadata).
+
+---
+
+## Customising Quarto: YAML Essentials
+- Key front‑matter options (`format`, `theme`, `toc`, `page-layout`).
+- Title blocks, banners, and page metadata.
+- Simple YAML changes that drastically improve look & feel.
+
+---
+
+## Customising Quarto: CSS / HTML Hooks
+- Small CSS tweaks for identity/branding.
+- HTML partials for headers/footers/notice blocks.
+- Organising styles for reuse across reports.
+
+---
+
+## UI Components: Cards, Value Boxes, Accordions
+- `bslib` package gives the “feel” of a Shiny app.
+- Cards for repeated plots (in lieu of interactive inputs).
+- Accordions for optional detail (in lieu of responsive text).
+
+---
+
+## Interactive Visuals: ggiraph (vs plotly)
+- Why `ggiraph`?
+  - Lightweight SVG output.
+  - Easier to customise; fully readable markup.
+  - R no longer officially supported for Plotly.
+- When plotly is still useful <!-- zoom/pan heavy use‑cases -->
+- Accessibility and load‑time considerations.
+
+---
+
+## Interactive Tables: `DT` + Extensions
+- Search, filtering, and export buttons.
+- Fixed headers and large-table handling.
+- Data download options. <!-- mention downloadthis as alternative -->
+
+---
+
+## Breaking Free of Markdown
+- Building HTML UIs with `bslib` / `htmltools` (no `.qmd`).
+- When a pure-HTML layout beats document‑oriented Markdown.
+- Trade‑offs: control vs authoring convenience.
+
+---
+
+## Saving Standalone HTML from R
+- Exporting self‑contained HTML outputs.
+- Packaging assets (CSS/JS/fonts) for offline sharing.
+<!-- share my code for saving reports -->
+
+---
+
+## Recommended Templates & Starter Kits
+- Quarto parameterised report template (bslib + ggiraph + DT).
+- Pure HTML (`bslib` + `htmltools`) template.
