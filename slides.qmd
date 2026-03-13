@@ -11,81 +11,346 @@ format:
     incremental: false
     chalkboard: false
     code-overflow: wrap
+    code-annotations: select
+execute: 
+  eval: false
+  echo: true
 ---
+
+```{r eval=TRUE, echo=FALSE}
+library(bslib)
+library(dplyr)
+library(ggplot2)
+library(ggiraph)
+```
 
 ## Context: Reporting Constraints in PHS
-- Shiny often blocked by hosting/governance.
-- Need attractive, lightweight HTML outputs.
-- Maintainability, reproducibility, and accessibility matter.
 
----
+-   Shiny often blocked by hosting/governance.
+-   Need attractive, lightweight HTML outputs.
+-   Maintainability, reproducibility, and accessibility matter.
 
-## Dashboards vs Parameterised Reports
-- Not the same thing! <!-- pictures of layout differences -->
-- When to choose a dashboard (explore / monitor live data).
-- When to choose parameterised reports (batching per board/hospital).
+------------------------------------------------------------------------
 
----
+## Dashboards vs Parameterised Reports  {.smaller}
 
-## Quarto Overview <!-- (for Rmd newcomers) -->
-- What Quarto is and why it replaced R Markdown.
-- Same Markdown feel, modern features, long-term support.
-- Reusable assets (themes, includes, metadata).
+::::: columns
+::: {.column width="50%"}
+![](https://content.assets.pressassociation.io/2020/05/26142506/789060cd-2903-4a3c-903a-b4b223d8f9d7.jpg){height="300"}
+:::
 
----
+::: {.column width="50%"}
+-   Quickly communicate a variety of data at a glance
+-   Monitor live or fast-changing statistics
+:::
+:::::
 
-## Customising Quarto: YAML Essentials
-- Key front‑matter options (`format`, `theme`, `toc`, `page-layout`).
-- Title blocks, banners, and page metadata.
-- Simple YAML changes that drastically improve look & feel.
+::::: columns
+::: {.column width="50%"}
+![](https://jadeynryan.github.io/2023_posit-parameterized-quarto/images/report_html.png){height="300"}
+:::
 
----
+::: {.column width="50%"}
+-   In-depth exploration of data
+-   Can be be 'parameterised' (eg. batching per board/site)
+:::
+:::::
+------------------------------------------------------------------------
 
-## Customising Quarto: CSS / HTML Hooks
-- Small CSS tweaks for identity/branding.
-- HTML partials for headers/footers/notice blocks.
-- Organising styles for reuse across reports.
+## Parameterised reports with `quarto` and `rmarkdown` {.smaller}
 
----
+- Very similar!  
+- Why use `quarto`?
+    -   modern features by default
+    -   long-term support
+    -   multi-language
+    -   reusable assets (brand, includes, metadata).
+- **However** `quarto` is still a work in progress
+    -   support for some packages, including `bslib`, is patchy
+    -   `rmarkdown` is sometimes better documented
 
-## UI Components: Cards, Value Boxes, Accordions
-- `bslib` package gives the “feel” of a Shiny app.
-- Cards for repeated plots (in lieu of interactive inputs).
-- Accordions for optional detail (in lieu of responsive text).
+------------------------------------------------------------------------
 
----
+## Customising Quarto/RMd {.smaller}
 
-## Interactive Visuals: ggiraph (vs plotly)
-- Why `ggiraph`?
-  - Lightweight SVG output.
-  - Easier to customise; fully readable markup.
-  - R no longer officially supported for Plotly.
-- When plotly is still useful <!-- zoom/pan heavy use‑cases -->
-- Accessibility and load‑time considerations.
+### YAML Essentials
 
----
+#### Quarto
+
+::::: {.columns}
+
+::: {.column width="70%"}
+```{yaml}
+title: Penguin report
+subtitle: `r paste(params$location, params$year)`
+format:
+  html:
+    toc: true                 # <1>
+    self-contained: true      # <2>
+execute:                      # <3>
+  echo: false                 # <3>                 
+  message: false              # <3>  
+  warning: false              # <3>
+params:                       # <4>
+  location: "Torgersen"       # <4>       
+  year: 2008                  # <4>       
+```
+
+1. Table of contents (further options can control position and appearance)
+2. Export as **standalone** `.html` file
+3. Whether to include source code and error messages in output
+4. Parameters! Access these anywhere with `params$...`
+:::
+
+:::::
+
+------------------------------------------------------------------------
+
+## Customising Quarto/RMd {.smaller}
+
+### YAML Essentials
+
+#### RMd
+
+::::: {.columns}
+
+::: {.column width="70%"}
+```{yaml}
+title: Penguin report
+subtitle: `r paste(params$location, params$year)`
+format:
+  html:
+    toc: true                 # <1>
+    self-contained: true      # <2>
+knitr:                        # <3>
+  opts_chunk:                 # <3>
+    echo: false               # <3>                 
+    message: false            # <3>  
+    warning: false            # <3>
+params:                       # <4>
+  location: "Torgersen"       # <4>       
+  year: 2008                  # <4>       
+```
+
+1. Table of contents (further options can control position and appearance)
+2. Export as **standalone** `.html` file
+3. Whether to include source code and error messages in output
+4. Parameters! Access these anywhere with `params$...`
+:::
+
+:::::
+
+------------------------------------------------------------------------
+
+## Customising Quarto/RMd {.smaller}
+
+### CSS / HTML
+
+-   Small CSS tweaks can be added anywhere, e.g.:
+
+```{css}
+.small-text{
+  font-size: 50%  
+}
+```
+
+-   HTML partials for headers/footers/notice blocks.
+-   Organising styles for reuse across reports:
+    -   CSS stylesheet
+    -   Quarto supports brand YAML
+
+------------------------------------------------------------------------
+
+## Example {.smaller}
+
+![](quarto_header.png){width=100%, fig-align="center"}
+
+```{yaml}
+title: MTC patient residence & incident location
+subtitle: "`r paste('Reporting on', params$from, 'to', params$to, 'for', params$hospital)`"
+date: "`r format(Sys.Date(), '%d %B %Y')`"
+author: "Scottish Trauma Audit Group"
+params:
+  hospital: "QEUH"
+  from: "July 2025"
+  to: "December 2025"
+format:
+  html:
+    toc: true
+    template-partials: 
+      - _extensions/banner-with-img/title-block.html
+css: _extensions/phs-html-quarto/phs_style.css
+```
+
+
+------------------------------------------------------------------------
+
+## UI Components {.smaller}
+
+`bslib` package can give the “feel” of a Shiny app to a static document.
+
+For example, navs can be used for plots by variable (in lieu of responsive inputs):
+
+::::: {.columns}
+
+::: {.column width="50%"}
+
+```{r}
+my_plot <- function(sx){
+  girafe(
+    filter(penguins, sex == sx) |>
+      ggplot(aes(body_mass, flipper_len)) +
+      geom_point()
+  )
+}
+
+navset_pill(
+  nav_panel("Male", 
+            card_body(
+              fillable=FALSE,
+              my_plot("male"))
+  ),
+  nav_panel("Female",
+            card_body(
+              fillable=FALSE,
+              my_plot("female"))
+  )
+)
+```
+
+:::
+
+::: {.column width="50%"}
+
+![](nav_pill.png)
+:::
+::::
+
+------------------------------------------------------------------------
+
+## Interactive Visuals: `ggiraph` (vs `plotly`)
+
+-   Why `ggiraph`?
+    -   Lightweight SVG output.
+    -   R no longer officially supported for Plotly.
+    -   Easier to customise and control (no messing around with `JS`)
+
+-----------------------------------------------------------------------
+
+## Example {.smaller}
+
+::::: {.columns}
+
+::: {.column width="70%"}
+```{r eval=TRUE}
+plot <- ggplot(
+  penguins,
+  aes( x= body_mass, y = flipper_len, colour = species,
+       tooltip = paste0(               # <1>
+         "Sex: ", sex,                 # <1>
+         "</br>Location: ", island     # <1>
+       ))) +
+  geom_point_interactive() +           # <2>
+  theme_light()                        # <3>
+
+girafe(plot)                           # <4>
+```
+
+1.  Tooltip can be a variable, string, or `glue` function
+2.  Most `ggplot2` geoms have an `_interactive` variant
+3.  Unlike `plotly`, `ggplot2` themes work without issues
+4.  Call `girafe()` to turn any `ggplot` object into an SVG widget
+:::
+
+::::
+------------------------------------------------------------------------
 
 ## Interactive Tables: `DT` + Extensions
-- Search, filtering, and export buttons.
-- Fixed headers and large-table handling.
-- Data download options. <!-- mention downloadthis as alternative -->
 
----
+-   Search, filtering, and export buttons.
+-   Fixed headers and large-table handling.
+-   Data download options. <!-- mention downloadthis as alternative -->
+
+------------------------------------------------------------------------
 
 ## Breaking Free of Markdown
-- Building HTML UIs with `bslib` / `htmltools` (no `.qmd`).
-- When a pure-HTML layout beats document‑oriented Markdown.
-- Trade‑offs: control vs authoring convenience.
 
----
+-   Possible to build HTML UIs with just `bslib` and `htmltools` (no `quarto` or `rmarkdown`).
+```{r}
+page_fluid(
+  H1("Penguins"),
+  card(
+    datatable(penguins)
+  )
+)
+```
 
-## Saving Standalone HTML from R
-- Exporting self‑contained HTML outputs.
-- Packaging assets (CSS/JS/fonts) for offline sharing.
-<!-- share my code for saving reports -->
+-   Trade‑offs: control vs authoring convenience.
 
----
+------------------------------------------------------------------------
+
+## Example {.smaller}
+
+::::: {.columns}
+
+::: {.column width="50%"}
+```{r}
+# pages
+flipper_length <- nav_panel(
+  "Flipper length",
+  layout_columns(
+    col_widths = breakpoints(xs = c(-2,8,-2), xxl = c(-3,6,-3)),
+    "This page examines the flipper length of penguins",
+    navset_pill(
+      nav_panel("Male", 
+                card_body(
+                  fillable=FALSE,
+                  my_plot("male"))),
+      nav_panel("Female",
+                card_body(
+                  fillable=FALSE,
+                  my_plot("female")))
+    ))
+  )
+
+# report
+page_navbar(
+  title = "Penguin report",
+  fillable = FALSE,
+  navbar_options = navbar_options(
+    bg = "#3F3685"
+  ),
+  flipper_length
+)
+```
+:::
+
+::: {.column width="50%"}
+![](bslib_html.png)
+:::
+
+::::
+------------------------------------------------------------------------
+
+## Saving Standalone HTML from R {.smaller}
+
+-   Exporting self‑contained HTML outputs can be fiddly...
+-   Images need to be encoded in base64
+```{r}
+img_base64 <- function(path, ...) {
+  base64 <- base64enc::dataURI(file = path, mime = "image/png")
+  htmltools::tags$img(src = base64, ...)
+}
+```
+-   Fonts should be bundled to ensure consistency
+```{r}
+gdtools::addGFontHtmlDependency(family = "Open Sans")
+```
+-   `htmlwidgets::saveWidget()` works in some cases, but I have a custom `save_self_contained_html()` function that I'm happy to share
+
+------------------------------------------------------------------------
 
 ## Recommended Templates & Starter Kits
-- Quarto parameterised report template (bslib + ggiraph + DT).
-- Pure HTML (`bslib` + `htmltools`) template.
+
+-   Quarto parameterised report template (bslib + ggiraph + DT).
+-   Pure HTML (`bslib` + `htmltools`) template.
