@@ -1,0 +1,95 @@
+---
+title: Penguin report
+subtitle: "`r paste(params$location, params$year)`"
+params:
+  location: "Biscoe"       
+  year: 2008 
+format:
+  html:
+    toc: true
+    toc_float: true
+    embed-resources: true
+    template-partials: 
+      - _extensions/banner-with-img/title-block.html
+execute:
+  echo: false
+  message: false
+  warning: false
+date: "`r format(Sys.Date(), '%d %B %Y')`"
+author: "Scottish Trauma Audit Group"
+css: _extensions/phs-html-quarto/phs_style.css
+title-block-banner: "#3F3685"
+title-image: _extensions/phs-html-quarto/phs-logo.png
+---
+
+## Example report
+
+Reporting on all penguins on `r params$location` island in `r params$year`.
+
+### Overview
+```{r}
+library(bslib)
+library(dplyr)
+library(ggplot2)
+library(ggiraph)
+library(DT)
+
+dat <- penguins |>
+  filter(year == params$year,
+         island == params$location) |>
+  select(species, sex, bill_len:body_mass)
+
+dat |>
+  datatable(extensions = c('Select', 'SearchPanes'),
+              selection = 'none',
+              rownames = FALSE,
+              options = list(dom = 'Prtip',
+                             searchPanes = list(
+                               controls = FALSE,
+                               viewCount = FALSE
+                             ),
+                             columnDefs = list(
+                               list(searchPanes = list(show = FALSE),
+                                    targets = 2:5)
+                             ),
+                             pageLength = 5)
+            )
+```
+
+### Flipper length by body mass
+
+```{r include=FALSE}
+my_plot <- function(sx){
+  filter(dat, sex == sx) |>
+    ggplot(aes(body_mass, flipper_len, colour=species,
+               data_id = species)) +
+    geom_point_interactive()
+}
+
+set_girafe_defaults(
+  opts_hover = opts_hover(css = "opacity:0.8"),
+  opts_hover_inv = opts_hover_inv(css = "opacity:0.4"))
+
+# due to some odd behaviour in Quarto, girafe needs to be called (silently) before it works in a tabset 
+girafe(my_plot("male"))
+```
+
+
+```{r}
+#| panel: tabset
+#| output: asis
+#| keep-md: true
+
+plots <- list(
+  "Male" = my_plot("male"),
+  "Female" = my_plot("female"))
+
+purrr::iwalk(plots, ~ {
+  cat('## ', .y, '\n\n')
+  
+  print(htmltools::div(girafe(.x)))
+  
+  cat('\n\n')
+  
+})
+```

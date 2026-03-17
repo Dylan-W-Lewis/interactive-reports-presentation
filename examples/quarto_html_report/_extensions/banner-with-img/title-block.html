@@ -1,0 +1,166 @@
+<!-- Title block with left image and full-height white strip behind image. Set `title-image: images/photo.jpg` in YAML. -->
+$if(title-image)$
+<style>
+/* Banner + white strip + image column */
+.quarto-title-banner.title-left-image {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+.quarto-title-banner.title-left-image::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 180px;          /* adjust */
+  background: #fff;
+  z-index: 0;
+  box-shadow: 1px 0 0 rgba(0,0,0,0.03);
+}
+.quarto-title-banner.title-left-image .quarto-title-image {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 160px;       /* adjust */
+  max-width: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  box-sizing: border-box;
+}
+.quarto-title-banner.title-left-image .quarto-title-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+/* Outer meta column (ONLY the direct meta column of the banner) */
+.quarto-title-banner.title-left-image > .quarto-title-meta {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  padding-left: 0.5rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* vertical centering */
+  min-width: 0;
+}
+
+/* Reset title margins so centering is visually accurate */
+.quarto-title-banner.title-left-image .quarto-title .title {
+  margin: 0;
+}
+
+/* Arrange metadata (from the partial) as rows: label | value
+   The partial emits an inner .quarto-title-meta — target its child rows. */
+.quarto-title-banner.title-left-image > .quarto-title-meta .quarto-title-meta > div {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.75rem;
+  align-items: center;
+  /* margin: 0 0 0.25rem 0; */
+}
+
+/* Labels (e.g. "Published") */
+.quarto-title-banner.title-left-image .quarto-title-meta-heading {
+  margin: 0;
+  white-space: nowrap;
+  font-weight: 400;
+  /* To right-align labels, uncomment:
+     justify-self: end;
+     text-align: right;
+  */
+}
+
+/* Value cell: remove paragraph margins that cause extra lines */
+.quarto-title-banner.title-left-image .quarto-title-meta-contents {
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.quarto-title-banner.title-left-image .quarto-title-meta-contents p {
+  display: inline;
+  margin: 0;
+  padding: 0;
+}
+</style>
+$endif$
+
+<header id="title-block-header" class="quarto-title-block">
+  $if(title-image)$
+  <div class="quarto-title-banner title-left-image">
+    <div class="quarto-title-image">
+      <img src="$title-image$" alt="$title$" loading="lazy" />
+    </div>
+
+    <div class="quarto-title-meta">
+      <div class="quarto-title">
+        $if(title)$
+        <h1 class="title">$title$</h1>
+        $endif$
+        $if(subtitle)$
+        <p class="subtitle lead">$subtitle$</p>
+        $endif$
+        $if(categories)$
+          $if(quarto-template-params.title-block-categories)$
+        <div class="quarto-categories">
+          $for(categories)$
+          <div class="quarto-category">$categories$</div>
+          $endfor$
+        </div>
+          $endif$
+        $endif$
+      </div>
+
+      $if(hide-description)$
+      $elseif(description)$
+      <div>
+        <div class="description">
+          $description$
+        </div>
+      </div>
+      $endif$
+
+      $title-metadata.html()$
+    </div>
+  </div>
+  $else$
+  <!-- existing banner markup when no image provided -->
+  <div class="quarto-title-banner">
+    <div class="quarto-title-meta">
+      <div class="quarto-title">
+        $if(title)$
+        <h1 class="title">$title$</h1>
+        $endif$
+        $if(subtitle)$
+        <p class="subtitle lead">$subtitle$</p>
+        $endif$
+        $if(categories)$
+          $if(quarto-template-params.title-block-categories)$
+        <div class="quarto-categories">
+          $for(categories)$
+          <div class="quarto-category">$categories$</div>
+          $endfor$
+        </div>
+          $endif$
+        $endif$
+      </div>
+
+      $if(hide-description)$
+      $elseif(description)$
+      <div>
+        <div class="description">
+          $description$
+        </div>
+      </div>
+      $endif$
+
+      $title-metadata.html()$
+    </div>
+  </div>
+  $endif$
+</header>

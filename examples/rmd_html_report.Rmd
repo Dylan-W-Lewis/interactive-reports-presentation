@@ -1,0 +1,92 @@
+---
+title: Penguin report
+subtitle: "`r paste(params$location, params$year)`"
+output:
+  html_document:
+    toc: true
+    self-contained: true
+    theme:
+      bslib: true
+      version: 5
+params:
+  location: "Biscoe"       
+  year: 2008  
+---
+
+```{r include=FALSE} 
+knitr::opts_chunk$set(
+  echo =  FALSE,
+  message = FALSE,
+  warning = FALSE
+) 
+```
+
+
+```{r include=FALSE}
+library(bslib)
+library(dplyr)
+library(ggplot2)
+library(ggiraph)
+library(DT)
+
+dat <- penguins |>
+  filter(year == params$year,
+         island == params$location) |>
+  select(species, sex, bill_len:body_mass)
+```
+
+
+## Example report
+
+Reporting on all penguins in `r params$location` in `r params$year`.
+
+### Overview
+
+```{r}
+dat |>
+  datatable(extensions = c('Select', 'SearchPanes'),
+              selection = 'none',
+              rownames = FALSE,
+              options = list(dom = 'Prtip',
+                             searchPanes = list(
+                               controls = FALSE,
+                               viewCount = FALSE
+                             ),
+                             columnDefs = list(
+                               list(searchPanes = list(show = FALSE),
+                                    targets = 2:5)
+                             ),
+                             pageLength = 5)
+            )
+```
+
+
+### Flipper length by body mass
+
+```{r}
+set_girafe_defaults(
+  opts_hover = opts_hover(css = "opacity:0.8"),
+  opts_hover_inv = opts_hover_inv(css = "opacity:0.4"))
+
+my_plot <- function(sx){
+  girafe(
+    filter(dat, sex == sx) |>
+      ggplot(aes(body_mass, flipper_len, colour=species,
+                 data_id = species)) +
+      geom_point()
+  )
+}
+
+navset_pill(
+  nav_panel("Male", 
+            card_body(
+              fillable=FALSE,
+              my_plot("male"))
+  ),
+  nav_panel("Female",
+            card_body(
+              fillable=FALSE,
+              my_plot("female"))
+  )
+)
+```
