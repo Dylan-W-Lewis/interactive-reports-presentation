@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="slides_files/libs/clipboard/clipboard.min.js"></script>
+<script src="slides_files/libs/quarto-html/tabby.min.js"></script>
+<script src="slides_files/libs/quarto-html/popper.min.js"></script>
+<script src="slides_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="slides_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="slides_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="slides_files/libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.25">
+
+  <meta name="author" content="Dylan Lewis">
+  <title>Modern HTML Reporting in R</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="slides_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="slides_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="slides_files/libs/revealjs/dist/theme/quarto-68b551005c65b4d8d2882243e51902db.css">
+  <link href="slides_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="slides_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="slides_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="slides_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+  <link href="slides_files/libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+  <script src="slides_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+  <link href="slides_files/libs/ggiraphjs-0.9.4/girafe.css" rel="stylesheet">
+  <script src="slides_files/libs/ggiraphjs-0.9.4/girafe.js"></script>
+  <script src="slides_files/libs/girafe-binding-0.9.6/girafe.js"></script>
+  <link href="slides_files/libs/liberation-sans-0.5.0/css/liberation-sans.css" rel="stylesheet">
+  <link href="slides_files/libs/liberation-serif-0.5.0/css/liberation-serif.css" rel="stylesheet">
+  <link href="slides_files/libs/liberation-mono-0.5.0/css/liberation-mono.css" rel="stylesheet">
+  <link href="slides_files/libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+  <script src="slides_files/libs/datatables-binding-0.34.0/datatables.js"></script>
+  <script src="slides_files/libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+  <link href="slides_files/libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+  <link href="slides_files/libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+  <script src="slides_files/libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+  <link href="slides_files/libs/dt-ext-select-1.13.6/css/select.dataTables.min.css" rel="stylesheet">
+  <script src="slides_files/libs/dt-ext-select-1.13.6/js/dataTables.select.min.js"></script>
+  <link href="slides_files/libs/dt-ext-searchpanes-1.13.6/css/searchPanes.dataTables.min.css" rel="stylesheet">
+  <script src="slides_files/libs/dt-ext-searchpanes-1.13.6/js/dataTables.searchPanes.min.js"></script>
+  <link href="slides_files/libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet">
+  <script src="slides_files/libs/crosstalk-1.2.2/js/crosstalk.min.js"></script>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Modern HTML Reporting in R</h1>
+  <p class="subtitle">No Shiny needed</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Dylan Lewis 
+</div>
+</div>
+</div>
+
+</section>
+<section>
+<section id="motivation-context" class="title-slide slide level1 center middle">
+<h1>Motivation &amp; Context</h1>
+
+</section>
+<section id="reporting-constraints-in-phs" class="slide level2">
+<h2>Reporting Constraints in PHS</h2>
+<ul>
+<li>Governance and hosting constraints often block <strong>Shiny</strong>.</li>
+<li>However, teams still need <strong>interactive</strong>, attractive outputs.</li>
+<li>Requirements:
+<ul>
+<li>Lightweight HTML files</li>
+<li>Reproducible, maintainable workflows</li>
+<li>Accessible and long‑lived outputs</li>
+</ul></li>
+</ul>
+</section>
+<section id="dashboards-vs-parameterised-reports" class="slide level2 smaller">
+<h2>Dashboards vs Parameterised Reports</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><img data-src="https://content.assets.pressassociation.io/2020/05/26142506/789060cd-2903-4a3c-903a-b4b223d8f9d7.jpg" height="250"></p>
+</div><div class="column" style="width:50%;">
+<ul>
+<li>Quickly communicate a variety of data at a glance</li>
+<li>Monitor live or fast-changing statistics</li>
+</ul>
+</div></div>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><img data-src="https://jadeynryan.github.io/2023_posit-parameterized-quarto/images/report_html.png" height="250"></p>
+</div><div class="column" style="width:50%;">
+<ul>
+<li>In-depth exploration of data</li>
+<li>Can be be ‘parameterised’</li>
+</ul>
+</div></div>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="authoring-formats-for-html-reporting" class="title-slide slide level1 center middle">
+<h1>Authoring Formats for HTML Reporting</h1>
+
+</section>
+<section id="quarto-r-markdown" class="slide level2 smaller">
+<h2>Quarto &amp; R Markdown</h2>
+<p>Both generate high‑quality HTML reports, but with different strengths.</p>
+<h3 id="why-quarto">Why Quarto?</h3>
+<ul>
+<li>Modern defaults<br>
+</li>
+<li>Long-term support<br>
+</li>
+<li>Cross-language capabilities<br>
+</li>
+<li>Built‑in brand/themes/includes</li>
+</ul>
+<h3 id="why-r-markdown">Why R Markdown?</h3>
+<ul>
+<li>Mature ecosystem<br>
+</li>
+<li>Some tooling better documented<br>
+</li>
+<li>Familiar across R users</li>
+</ul>
+</section>
+<section id="parameterised-reports-quarto-rmd" class="slide level2">
+<h2>Parameterised Reports (Quarto &amp; RMd)</h2>
+<ul>
+<li>Both systems support parameters, which should be defined in the YAML header.</li>
+<li>Use parameters to batch reports across sites/boards, rerun for different time periods, etc.</li>
+<li>Access with <code>params$...</code>.</li>
+</ul>
+</section>
+<section id="customising-quartormd" class="slide level2 smaller">
+<h2>Customising Quarto/RMd</h2>
+<h3 id="yaml-essentials">YAML Essentials</h3>
+<h4 id="quarto">Quarto</h4>
+<div class="columns">
+<div class="column" style="width:70%;">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="annotated-cell-7"><pre class="sourceCode yaml code-annotation-code code-with-copy code-annotated"><code class="sourceCode yaml"><span id="annotated-cell-7-1"><a href="#annotated-cell-7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> Penguin report</span></span>
+<span id="annotated-cell-7-2"><a href="#annotated-cell-7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">subtitle</span><span class="kw">:</span><span class="at"> `r paste(params$location, params$year)`</span></span>
+<span id="annotated-cell-7-3"><a href="#annotated-cell-7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">format</span><span class="kw">:</span></span>
+<span id="annotated-cell-7-4"><a href="#annotated-cell-7-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">html</span><span class="kw">:</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-7" data-target-annotation="1">1</button><span id="annotated-cell-7-5" class="code-annotation-target"><a href="#annotated-cell-7-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">toc</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-7" data-target-annotation="2">2</button><span id="annotated-cell-7-6" class="code-annotation-target"><a href="#annotated-cell-7-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">self-contained</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-7" data-target-annotation="3">3</button><span id="annotated-cell-7-7" class="code-annotation-target"><a href="#annotated-cell-7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">execute</span><span class="kw">:</span></span>
+<span id="annotated-cell-7-8"><a href="#annotated-cell-7-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">echo</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="annotated-cell-7-9"><a href="#annotated-cell-7-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">message</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="annotated-cell-7-10"><a href="#annotated-cell-7-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">warning</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-7" data-target-annotation="4">4</button><span id="annotated-cell-7-11" class="code-annotation-target"><a href="#annotated-cell-7-11" aria-hidden="true" tabindex="-1"></a><span class="fu">params</span><span class="kw">:</span></span>
+<span id="annotated-cell-7-12"><a href="#annotated-cell-7-12" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">location</span><span class="kw">:</span><span class="at"> </span><span class="st">"Torgersen"</span></span>
+<span id="annotated-cell-7-13"><a href="#annotated-cell-7-13" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">year</span><span class="kw">:</span><span class="at"> </span><span class="dv">2008</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-hidden code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-7" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-7" data-code-lines="5" data-code-annotation="1">Table of contents (further options can control position and appearance)</span>
+</dd>
+<dt data-target-cell="annotated-cell-7" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-7" data-code-lines="6" data-code-annotation="2">Export as <strong>standalone</strong> <code>.html</code> file</span>
+</dd>
+<dt data-target-cell="annotated-cell-7" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-7" data-code-lines="7,8,9,10" data-code-annotation="3">Whether to include source code and error messages in output</span>
+</dd>
+<dt data-target-cell="annotated-cell-7" data-target-annotation="4">4</dt>
+<dd>
+<span data-code-cell="annotated-cell-7" data-code-lines="11,12,13" data-code-annotation="4">Parameters! Access these anywhere with <code>params$...</code></span>
+</dd>
+</dl>
+</div>
+</div>
+</div></div>
+</section>
+<section id="customising-quartormd-1" class="slide level2 smaller">
+<h2>Customising Quarto/RMd</h2>
+<h3 id="yaml-essentials-1">YAML Essentials</h3>
+<h4 id="rmd">RMd</h4>
+<div class="columns">
+<div class="column" style="width:70%;">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="annotated-cell-8"><pre class="sourceCode yaml code-annotation-code code-with-copy code-annotated"><code class="sourceCode yaml"><span id="annotated-cell-8-1"><a href="#annotated-cell-8-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="annotated-cell-8-2"><a href="#annotated-cell-8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> Penguin report</span></span>
+<span id="annotated-cell-8-3"><a href="#annotated-cell-8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">subtitle</span><span class="kw">:</span><span class="at"> `r paste(params$location, params$year)`</span></span>
+<span id="annotated-cell-8-4"><a href="#annotated-cell-8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">output</span><span class="kw">:</span></span>
+<span id="annotated-cell-8-5"><a href="#annotated-cell-8-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">html</span><span class="kw">:</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-8" data-target-annotation="1">1</button><span id="annotated-cell-8-6" class="code-annotation-target"><a href="#annotated-cell-8-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">toc</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-8" data-target-annotation="2">2</button><span id="annotated-cell-8-7" class="code-annotation-target"><a href="#annotated-cell-8-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">self-contained</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-8" data-target-annotation="4">4</button><span id="annotated-cell-8-8" class="code-annotation-target"><a href="#annotated-cell-8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">params</span><span class="kw">:</span></span>
+<span id="annotated-cell-8-9"><a href="#annotated-cell-8-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">location</span><span class="kw">:</span><span class="at"> </span><span class="st">"Torgersen"</span></span>
+<span id="annotated-cell-8-10"><a href="#annotated-cell-8-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">year</span><span class="kw">:</span><span class="at"> </span><span class="dv">2008</span></span>
+<span id="annotated-cell-8-11"><a href="#annotated-cell-8-11" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="annotated-cell-8-12"><a href="#annotated-cell-8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="annotated-cell-8-13"><a href="#annotated-cell-8-13" aria-hidden="true" tabindex="-1"></a><span class="kw">{</span><span class="at">r include=FALSE</span><span class="kw">}</span><span class="at">        </span></span>
+<span id="annotated-cell-8-14"><a href="#annotated-cell-8-14" aria-hidden="true" tabindex="-1"></a><span class="at">knitr::opts_chunk$set(</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-8" data-target-annotation="3">3</button><span id="annotated-cell-8-15" class="code-annotation-target"><a href="#annotated-cell-8-15" aria-hidden="true" tabindex="-1"></a><span class="at">  echo =  FALSE,</span></span>
+<span id="annotated-cell-8-16"><a href="#annotated-cell-8-16" aria-hidden="true" tabindex="-1"></a><span class="at">  message = FALSE,</span></span>
+<span id="annotated-cell-8-17"><a href="#annotated-cell-8-17" aria-hidden="true" tabindex="-1"></a><span class="at">  warning = FALSE</span></span>
+<span id="annotated-cell-8-18"><a href="#annotated-cell-8-18" aria-hidden="true" tabindex="-1"></a><span class="at">) </span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-hidden code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-8" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-8" data-code-lines="6" data-code-annotation="1">Table of contents (further options can control position and appearance)</span>
+</dd>
+<dt data-target-cell="annotated-cell-8" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-8" data-code-lines="7" data-code-annotation="2">Export as <strong>standalone</strong> <code>.html</code> file</span>
+</dd>
+<dt data-target-cell="annotated-cell-8" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-8" data-code-lines="15,16,17" data-code-annotation="3">Whether to include source code and error messages in output</span>
+</dd>
+<dt data-target-cell="annotated-cell-8" data-target-annotation="4">4</dt>
+<dd>
+<span data-code-cell="annotated-cell-8" data-code-lines="8,9,10" data-code-annotation="4">Parameters! Access these anywhere with <code>params$...</code></span>
+</dd>
+</dl>
+</div>
+</div>
+</div></div>
+</section>
+<section id="customising-quartormd-2" class="slide level2 smaller">
+<h2>Customising Quarto/RMd</h2>
+<h3 id="css-html">CSS / HTML</h3>
+<ul>
+<li>Small CSS tweaks can be added anywhere, e.g.:</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode css code-with-copy"><code class="sourceCode css"><span id="cb1-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">.small-text</span>{</span>
+<span id="cb1-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="kw">font-size</span><span class="ch">:</span> <span class="dv">50</span><span class="dt">%</span>  </span>
+<span id="cb1-3"><a href="" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>HTML partials for headers/footers/notice blocks.</li>
+<li>Organising styles for reuse across reports:
+<ul>
+<li>CSS stylesheet</li>
+<li>Quarto supports brand YAML</li>
+</ul></li>
+</ul>
+</section>
+<section id="example-styled-quarto-yaml" class="slide level2 smaller">
+<h2>Example Styled Quarto YAML</h2>
+
+<img data-src="img/quarto_header.png" class="quarto-figure quarto-figure-center r-stretch"><div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb2-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> MTC patient residence &amp; incident location</span></span>
+<span id="cb2-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">subtitle</span><span class="kw">:</span><span class="at"> </span><span class="st">"`r paste('Reporting on', params$from, 'to', params$to, 'for', params$hospital)`"</span></span>
+<span id="cb2-3"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">date</span><span class="kw">:</span><span class="at"> </span><span class="st">"`r format(Sys.Date(), '%d %B %Y')`"</span></span>
+<span id="cb2-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">author</span><span class="kw">:</span><span class="at"> </span><span class="st">"Scottish Trauma Audit Group"</span></span>
+<span id="cb2-5"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">params</span><span class="kw">:</span></span>
+<span id="cb2-6"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">hospital</span><span class="kw">:</span><span class="at"> </span><span class="st">"QEUH"</span></span>
+<span id="cb2-7"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">from</span><span class="kw">:</span><span class="at"> </span><span class="st">"July 2025"</span></span>
+<span id="cb2-8"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">to</span><span class="kw">:</span><span class="at"> </span><span class="st">"December 2025"</span></span>
+<span id="cb2-9"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">format</span><span class="kw">:</span></span>
+<span id="cb2-10"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">html</span><span class="kw">:</span></span>
+<span id="cb2-11"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">toc</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb2-12"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">template-partials</span><span class="kw">:</span><span class="at"> </span></span>
+<span id="cb2-13"><a href="" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> _extensions/banner-with-img/title-block.html</span></span>
+<span id="cb2-14"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">css</span><span class="kw">:</span><span class="at"> _extensions/phs-html-quarto/phs_style.css</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="leaving-markdown-behind" class="slide level2 smaller">
+<h2>Leaving Markdown Behind</h2>
+<p>You can also build HTML directly using <code>bslib</code> + <code>htmltools</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">page_fluid</span>(</span>
+<span id="cb3-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">H1</span>(<span class="st">"Penguins"</span>),</span>
+<span id="cb3-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">card</span>(</span>
+<span id="cb3-4"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">datatable</span>(penguins)</span>
+<span id="cb3-5"><a href="" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-6"><a href="" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Benefits:</p>
+<ul>
+<li>Full layout flexibility<br>
+</li>
+<li>Multi‑page designs<br>
+</li>
+<li>Reusable components</li>
+</ul>
+<p>Trade‑off:</p>
+<ul>
+<li>Less author-friendly than markdown</li>
+</ul>
+</section>
+<section id="example-multi-page-custom-ui" class="slide level2 smaller">
+<h2>Example: Multi-page Custom UI</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># pages</span></span>
+<span id="cb4-2"><a href="" aria-hidden="true" tabindex="-1"></a>flipper_length <span class="ot">&lt;-</span> <span class="fu">nav_panel</span>(</span>
+<span id="cb4-3"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Flipper length"</span>,</span>
+<span id="cb4-4"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layout_columns</span>(</span>
+<span id="cb4-5"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="at">col_widths =</span> <span class="fu">breakpoints</span>(</span>
+<span id="cb4-6"><a href="" aria-hidden="true" tabindex="-1"></a>      <span class="at">xs =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">8</span>,<span class="sc">-</span><span class="dv">2</span>), <span class="at">xxl =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>,<span class="dv">6</span>,<span class="sc">-</span><span class="dv">3</span>)),</span>
+<span id="cb4-7"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="st">"This page examines the flipper length of penguins"</span>,</span>
+<span id="cb4-8"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">navset_pill</span>(</span>
+<span id="cb4-9"><a href="" aria-hidden="true" tabindex="-1"></a>      <span class="fu">nav_panel</span>(<span class="st">"Male"</span>, </span>
+<span id="cb4-10"><a href="" aria-hidden="true" tabindex="-1"></a>                <span class="fu">card_body</span>(</span>
+<span id="cb4-11"><a href="" aria-hidden="true" tabindex="-1"></a>                  <span class="at">fillable=</span><span class="cn">FALSE</span>,</span>
+<span id="cb4-12"><a href="" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">my_plot</span>(<span class="st">"male"</span>))),</span>
+<span id="cb4-13"><a href="" aria-hidden="true" tabindex="-1"></a>      <span class="fu">nav_panel</span>(<span class="st">"Female"</span>,</span>
+<span id="cb4-14"><a href="" aria-hidden="true" tabindex="-1"></a>                <span class="fu">card_body</span>(</span>
+<span id="cb4-15"><a href="" aria-hidden="true" tabindex="-1"></a>                  <span class="at">fillable=</span><span class="cn">FALSE</span>,</span>
+<span id="cb4-16"><a href="" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">my_plot</span>(<span class="st">"female"</span>)))</span>
+<span id="cb4-17"><a href="" aria-hidden="true" tabindex="-1"></a>    ))</span>
+<span id="cb4-18"><a href="" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-19"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># report</span></span>
+<span id="cb4-21"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">page_navbar</span>(</span>
+<span id="cb4-22"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Penguin report"</span>,</span>
+<span id="cb4-23"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="at">fillable =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb4-24"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="at">navbar_options =</span> <span class="fu">navbar_options</span>(</span>
+<span id="cb4-25"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="at">bg =</span> <span class="st">"#3F3685"</span></span>
+<span id="cb4-26"><a href="" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb4-27"><a href="" aria-hidden="true" tabindex="-1"></a>  flipper_length</span>
+<span id="cb4-28"><a href="" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div><div class="column" style="width:50%;">
+<p><img data-src="img/bslib_html.png"></p>
+</div></div>
+</section>
+<section id="saving-standalone-html-from-r" class="slide level2 smaller">
+<h2>Saving Standalone HTML from R</h2>
+<ul>
+<li>Exporting self‑contained HTML outputs can be fiddly…</li>
+<li>Images need to be encoded in base64</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="" aria-hidden="true" tabindex="-1"></a>img_base64 <span class="ot">&lt;-</span> <span class="cf">function</span>(path, ...) {</span>
+<span id="cb5-2"><a href="" aria-hidden="true" tabindex="-1"></a>  base64 <span class="ot">&lt;-</span> base64enc<span class="sc">::</span><span class="fu">dataURI</span>(<span class="at">file =</span> path, <span class="at">mime =</span> <span class="st">"image/png"</span>)</span>
+<span id="cb5-3"><a href="" aria-hidden="true" tabindex="-1"></a>  htmltools<span class="sc">::</span>tags<span class="sc">$</span><span class="fu">img</span>(<span class="at">src =</span> base64, ...)</span>
+<span id="cb5-4"><a href="" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>Fonts should be bundled to ensure consistency</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="" aria-hidden="true" tabindex="-1"></a>gdtools<span class="sc">::</span><span class="fu">addGFontHtmlDependency</span>(<span class="at">family =</span> <span class="st">"Open Sans"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li><code>htmlwidgets::saveWidget()</code> works in some cases, but I have a custom <code>save_self_contained_html()</code> function that I’m happy to share</li>
+</ul>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="adding-interactivity-without-shiny" class="title-slide slide level1 center middle">
+<h1>Adding Interactivity Without Shiny</h1>
+
+</section>
+<section id="ui-components" class="slide level2 smaller">
+<h2>UI Components</h2>
+<p><code>bslib</code> package can mimic Shiny-like behavoiur in a static document.</p>
+<p>For example, hidden nav containers can be used to select between filtered plots (in lieu of responsive inputs):</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="" aria-hidden="true" tabindex="-1"></a>my_plot <span class="ot">&lt;-</span> <span class="cf">function</span>(sx){</span>
+<span id="cb7-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">girafe</span>(</span>
+<span id="cb7-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(penguins, sex <span class="sc">==</span> sx) <span class="sc">|&gt;</span></span>
+<span id="cb7-4"><a href="" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">aes</span>(body_mass, flipper_len)) <span class="sc">+</span></span>
+<span id="cb7-5"><a href="" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_point</span>()</span>
+<span id="cb7-6"><a href="" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-7"><a href="" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-8"><a href="" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">navset_pill</span>(</span>
+<span id="cb7-10"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nav_panel</span>(<span class="st">"Male"</span>, </span>
+<span id="cb7-11"><a href="" aria-hidden="true" tabindex="-1"></a>            <span class="fu">card_body</span>(</span>
+<span id="cb7-12"><a href="" aria-hidden="true" tabindex="-1"></a>              <span class="at">fillable=</span><span class="cn">FALSE</span>,</span>
+<span id="cb7-13"><a href="" aria-hidden="true" tabindex="-1"></a>              <span class="fu">my_plot</span>(<span class="st">"male"</span>))</span>
+<span id="cb7-14"><a href="" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb7-15"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nav_panel</span>(<span class="st">"Female"</span>,</span>
+<span id="cb7-16"><a href="" aria-hidden="true" tabindex="-1"></a>            <span class="fu">card_body</span>(</span>
+<span id="cb7-17"><a href="" aria-hidden="true" tabindex="-1"></a>              <span class="at">fillable=</span><span class="cn">FALSE</span>,</span>
+<span id="cb7-18"><a href="" aria-hidden="true" tabindex="-1"></a>              <span class="fu">my_plot</span>(<span class="st">"female"</span>))</span>
+<span id="cb7-19"><a href="" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-20"><a href="" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div><div class="column" style="width:50%;">
+<p><img data-src="img/nav_pill.png"></p>
+</div></div>
+</section>
+<section id="interactive-visuals-ggiraph" class="slide level2">
+<h2>Interactive Visuals: <code>ggiraph</code></h2>
+<ul>
+<li>Why <code>ggiraph</code>?
+<ul>
+<li>Lightweight SVG output.</li>
+<li>Plotly for R no longer officially supported.</li>
+<li>Easier to customise and control (no messing around with <code>JS</code>)</li>
+</ul></li>
+</ul>
+</section>
+<section id="example" class="slide level2 smaller">
+<h2>Example</h2>
+<div class="columns">
+<div class="column" style="width:70%;">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="annotated-cell-11"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-11-1"><a href="#annotated-cell-11-1" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="annotated-cell-11-2"><a href="#annotated-cell-11-2" aria-hidden="true" tabindex="-1"></a>  penguins,</span>
+<span id="annotated-cell-11-3"><a href="#annotated-cell-11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>( <span class="at">x=</span> body_mass, <span class="at">y =</span> flipper_len, <span class="at">colour =</span> species,</span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-11" data-target-annotation="1">1</button><span id="annotated-cell-11-4" class="code-annotation-target"><a href="#annotated-cell-11-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">tooltip =</span> <span class="fu">paste0</span>(</span>
+<span id="annotated-cell-11-5"><a href="#annotated-cell-11-5" aria-hidden="true" tabindex="-1"></a>         <span class="st">"Year: "</span>, year),</span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-11" data-target-annotation="2">2</button><span id="annotated-cell-11-6" class="code-annotation-target"><a href="#annotated-cell-11-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">data_id =</span> year</span>
+<span id="annotated-cell-11-7"><a href="#annotated-cell-11-7" aria-hidden="true" tabindex="-1"></a>       )) <span class="sc">+</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-11" data-target-annotation="3">3</button><span id="annotated-cell-11-8" class="code-annotation-target"><a href="#annotated-cell-11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point_interactive</span>() <span class="sc">+</span></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-11" data-target-annotation="4">4</button><span id="annotated-cell-11-9" class="code-annotation-target"><a href="#annotated-cell-11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()</span>
+<span id="annotated-cell-11-10"><a href="#annotated-cell-11-10" aria-hidden="true" tabindex="-1"></a></span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-11" data-target-annotation="5">5</button><span id="annotated-cell-11-11" class="code-annotation-target"><a href="#annotated-cell-11-11" aria-hidden="true" tabindex="-1"></a><span class="fu">girafe</span>(plot,</span>
+<button class="code-annotation-anchor" data-target-cell="annotated-cell-11" data-target-annotation="6">6</button><span id="annotated-cell-11-12" class="code-annotation-target"><a href="#annotated-cell-11-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">options =</span> <span class="fu">list</span>(<span class="fu">opts_hover</span>(<span class="at">css =</span> <span class="st">"opacity:0.9"</span>),</span>
+<span id="annotated-cell-11-13"><a href="#annotated-cell-11-13" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">opts_hover_inv</span>(<span class="at">css =</span> <span class="st">"opacity:0.3"</span>)))</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-hidden code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-11" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-11" data-code-lines="4,5" data-code-annotation="1">Tooltip can be a variable, string, or <code>glue</code> function</span>
+</dd>
+<dt data-target-cell="annotated-cell-11" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-11" data-code-lines="6" data-code-annotation="2"><code>data_id</code> controls hover effect groups</span>
+</dd>
+<dt data-target-cell="annotated-cell-11" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-11" data-code-lines="8" data-code-annotation="3">Most <code>ggplot2</code> geoms have an <code>_interactive</code> variant</span>
+</dd>
+<dt data-target-cell="annotated-cell-11" data-target-annotation="4">4</dt>
+<dd>
+<span data-code-cell="annotated-cell-11" data-code-lines="9" data-code-annotation="4">Unlike <code>plotly</code>, <code>ggplot2</code> themes work without issues</span>
+</dd>
+<dt data-target-cell="annotated-cell-11" data-target-annotation="5">5</dt>
+<dd>
+<span data-code-cell="annotated-cell-11" data-code-lines="11" data-code-annotation="5">Call <code>girafe()</code> to turn any <code>ggplot</code> object into an SVG widget</span>
+</dd>
+<dt data-target-cell="annotated-cell-11" data-target-annotation="6">6</dt>
+<dd>
+<span data-code-cell="annotated-cell-11" data-code-lines="12,13" data-code-annotation="6"><code>ggiraph</code> allows the user to define the interactive behaviour</span>
+</dd>
+</dl>
+</div>
+<div class="cell-output-display">
+<div class="girafe html-widget html-fill-item" id="htmlwidget-107a8718ba5026a0a16a" style="width:960px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-107a8718ba5026a0a16a">{"x":{"html":"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='ggiraph-svg' role='graphics-document' id='svg_437eef02008402c0' viewBox='0 0 720 360'>\n <defs id='svg_437eef02008402c0_defs'>\n  <clipPath id='svg_437eef02008402c0_c1'>\n   <rect x='0' y='0' width='720' height='360'/>\n  <\/clipPath>\n  <clipPath id='svg_437eef02008402c0_c2'>\n   <rect x='37.69' y='5.48' width='594.49' height='323.64'/>\n  <\/clipPath>\n <\/defs>\n <g id='svg_437eef02008402c0_rootg' class='ggiraph-svg-rootg'>\n  <g clip-path='url(#svg_437eef02008402c0_c1)'>\n   <rect x='0' y='0' width='720' height='360' fill='#FFFFFF' fill-opacity='1' stroke='#FFFFFF' stroke-opacity='1' stroke-width='0.75' stroke-linejoin='round' stroke-linecap='round' class='ggiraph-svg-bg'/>\n   <rect x='0' y='0' width='720' height='360' fill='#FFFFFF' fill-opacity='1' stroke='#FFFFFF' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='round'/>\n  <\/g>\n  <g clip-path='url(#svg_437eef02008402c0_c2)'>\n   <rect x='37.69' y='5.48' width='594.49' height='323.64' fill='#FFFFFF' fill-opacity='1' stroke='none'/>\n   <polyline points='37.69,299.44 632.18,299.44' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='37.69,249.58 632.18,249.58' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='37.69,199.71 632.18,199.71' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='37.69,149.84 632.18,149.84' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='37.69,99.98 632.18,99.98' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='37.69,50.11 632.18,50.11' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='184.81,329.12 184.81,5.48' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='334.93,329.12 334.93,5.48' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='485.06,329.12 485.06,5.48' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='37.69,324.38 632.18,324.38' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='37.69,274.51 632.18,274.51' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='37.69,224.64 632.18,224.64' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='37.69,174.78 632.18,174.78' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='37.69,124.91 632.18,124.91' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='37.69,75.04 632.18,75.04' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='37.69,25.18 632.18,25.18' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='109.75,329.12 109.75,5.48' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='259.87,329.12 259.87,5.48' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='410.00,329.12 410.00,5.48' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='560.12,329.12 560.12,5.48' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <circle id='svg_437eef02008402c0_e1' cx='222.34' cy='269.52' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e2' cx='229.85' cy='244.59' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e3' cx='147.28' cy='199.71' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e4' cx='177.3' cy='209.68' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e5' cx='207.33' cy='224.64' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e6' cx='203.58' cy='269.52' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e7' cx='361.21' cy='199.71' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e8' cx='181.06' cy='209.68' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e9' cx='297.4' cy='224.64' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e10' cx='154.79' cy='244.59' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e11' cx='214.83' cy='274.51' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e12' cx='139.77' cy='264.54' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e13' cx='229.85' cy='219.66' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e14' cx='319.92' cy='184.75' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e15' cx='214.83' cy='249.58' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e16' cx='177.3' cy='199.71' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e17' cx='334.93' cy='189.74' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e18' cx='158.54' cy='254.56' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e19' cx='289.9' cy='204.7' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e20' cx='169.8' cy='304.43' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e21' cx='199.82' cy='274.51' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e22' cx='229.85' cy='229.63' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e23' cx='252.37' cy='249.58' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e24' cx='229.85' cy='274.51' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e25' cx='229.85' cy='239.6' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e26' cx='192.32' cy='259.55' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e27' cx='139.77' cy='239.6' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e28' cx='132.27' cy='314.4' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e29' cx='252.37' cy='274.51' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e30' cx='147.28' cy='284.48' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e31' cx='244.86' cy='284.48' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e32' cx='154.79' cy='234.62' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e33' cx='244.86' cy='254.56' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e34' cx='158.54' cy='199.71' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e35' cx='282.39' cy='194.72' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e36' cx='252.37' cy='224.64' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e37' cx='192.32' cy='274.51' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e38' cx='154.79' cy='269.52' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e39' cx='357.45' cy='254.56' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e40' cx='132.27' cy='264.54' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e41' cx='244.86' cy='199.71' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e42' cx='124.76' cy='244.59' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e43' cx='319.92' cy='194.72' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e44' cx='109.75' cy='249.58' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e45' cx='349.95' cy='224.64' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e46' cx='173.55' cy='264.54' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e47' cx='105.99' cy='279.5' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e48' cx='177.3' cy='224.64' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e49' cx='282.39' cy='219.66' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e50' cx='184.81' cy='244.59' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e51' cx='304.91' cy='234.62' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e52' cx='177.3' cy='224.64' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e53' cx='267.38' cy='174.78' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e54' cx='94.74' cy='239.6' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e55' cx='214.83' cy='219.66' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e56' cx='192.32' cy='244.59' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e57' cx='229.85' cy='209.68' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e58' cx='87.23' cy='269.52' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e59' cx='222.34' cy='204.7' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e60' cx='132.27' cy='249.58' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e61' cx='319.92' cy='199.71' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e62' cx='199.82' cy='249.58' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e63' cx='267.38' cy='214.67' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e64' cx='87.23' cy='254.56' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e65' cx='252.37' cy='214.67' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e66' cx='162.29' cy='199.71' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e67' cx='274.88' cy='234.62' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e68' cx='117.25' cy='224.64' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e69' cx='327.43' cy='184.75' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e70' cx='199.82' cy='224.64' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e71' cx='244.86' cy='224.64' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e72' cx='192.32' cy='194.72' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e73' cx='282.39' cy='189.74' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e74' cx='214.83' cy='224.64' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e75' cx='297.4' cy='199.71' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e76' cx='214.83' cy='219.66' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e77' cx='244.86' cy='254.56' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e78' cx='192.32' cy='239.6' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e79' cx='259.87' cy='199.71' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e80' cx='139.77' cy='229.63' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e81' cx='364.96' cy='194.72' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e82' cx='229.85' cy='239.6' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e83' cx='289.9' cy='209.68' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e84' cx='162.29' cy='219.66' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e85' cx='192.32' cy='204.7' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e86' cx='229.85' cy='224.64' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e87' cx='184.81' cy='229.63' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e88' cx='252.37' cy='229.63' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e89' cx='199.82' cy='224.64' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e90' cx='192.32' cy='164.8' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e91' cx='304.91' cy='149.84' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e92' cx='169.8' cy='249.58' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e93' cx='327.43' cy='244.59' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e94' cx='154.79' cy='239.6' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e95' cx='304.91' cy='134.88' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e96' cx='214.83' cy='224.64' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e97' cx='312.42' cy='194.72' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e98' cx='94.74' cy='284.48' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e99' cx='274.88' cy='214.67' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e100' cx='218.59' cy='214.67' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e101' cx='368.71' cy='159.82' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e102' cx='121.01' cy='259.55' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e103' cx='297.4' cy='224.64' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e104' cx='98.49' cy='209.68' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e105' cx='192.32' cy='254.56' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e106' cx='222.34' cy='179.76' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e107' cx='244.86' cy='224.64' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e108' cx='136.02' cy='269.52' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e109' cx='376.22' cy='189.74' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e110' cx='233.6' cy='184.75' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e111' cx='349.95' cy='219.66' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e112' cx='139.77' cy='209.68' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e113' cx='301.16' cy='189.74' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e114' cx='244.86' cy='219.66' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e115' cx='271.13' cy='194.72' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e116' cx='94.74' cy='234.62' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e117' cx='226.09' cy='179.76' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e118' cx='162.29' cy='229.63' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e119' cx='158.54' cy='229.63' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e120' cx='132.27' cy='239.6' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e121' cx='184.81' cy='184.75' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e122' cx='177.3' cy='294.46' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e123' cx='241.11' cy='164.8' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e124' cx='117.25' cy='244.59' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e125' cx='259.87' cy='179.76' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e126' cx='151.03' cy='219.66' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e127' cx='304.91' cy='199.71' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e128' cx='117.25' cy='219.66' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e129' cx='259.87' cy='124.91' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e130' cx='158.54' cy='224.64' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e131' cx='184.81' cy='189.74' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e132' cx='184.81' cy='209.68' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e133' cx='331.18' cy='179.76' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e134' cx='173.55' cy='239.6' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e135' cx='244.86' cy='224.64' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e136' cx='136.02' cy='219.66' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e137' cx='256.12' cy='174.78' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e138' cx='169.8' cy='249.58' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e139' cx='297.4' cy='209.68' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e140' cx='169.8' cy='209.68' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e141' cx='181.06' cy='239.6' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e142' cx='117.25' cy='234.62' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e143' cx='218.59' cy='224.64' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e144' cx='109.75' cy='214.67' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e145' cx='207.33' cy='249.58' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e146' cx='297.4' cy='224.64' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e147' cx='181.06' cy='254.56' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e148' cx='177.3' cy='199.71' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e149' cx='222.34' cy='209.68' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e150' cx='214.83' cy='239.6' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e151' cx='259.87' cy='169.79' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e152' cx='334.93' cy='119.92' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e153' cx='515.08' cy='25.18' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e154' cx='327.43' cy='124.91' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e155' cx='515.08' cy='85.02' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e156' cx='470.05' cy='99.98' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e157' cx='342.44' cy='124.91' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e158' cx='379.97' cy='119.92' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e159' cx='440.02' cy='80.03' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e160' cx='319.92' cy='129.9' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e161' cx='432.51' cy='99.98' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e162' cx='357.45' cy='104.96' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e163' cx='492.56' cy='94.99' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e164' cx='357.45' cy='104.96' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e165' cx='537.6' cy='109.95' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e166' cx='289.9' cy='124.91' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e167' cx='537.6' cy='90' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e168' cx='282.39' cy='124.91' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e169' cx='605.16' cy='70.06' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e170' cx='379.97' cy='129.9' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e171' cx='462.54' cy='65.07' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e172' cx='515.08' cy='85.02' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e173' cx='410' cy='99.98' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e174' cx='319.92' cy='109.95' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e175' cx='417.5' cy='99.98' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e176' cx='410' cy='99.98' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e177' cx='425.01' cy='99.98' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e178' cx='274.88' cy='94.99' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e179' cx='507.58' cy='99.98' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e180' cx='349.95' cy='124.91' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e181' cx='492.56' cy='75.04' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e182' cx='447.53' cy='65.07' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e183' cx='364.96' cy='129.9' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e184' cx='417.5' cy='139.87' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e185' cx='567.63' cy='25.18' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e186' cx='432.51' cy='75.04' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e187' cx='470.05' cy='75.04' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e188' cx='402.49' cy='109.95' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e189' cx='447.53' cy='80.03' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e190' cx='312.42' cy='134.88' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e191' cx='462.54' cy='134.88' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e192' cx='252.37' cy='134.88' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e193' cx='515.08' cy='50.11' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e194' cx='304.91' cy='124.91' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e195' cx='372.47' cy='94.99' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e196' cx='492.56' cy='65.07' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e197' cx='394.98' cy='90' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e198' cx='289.9' cy='124.91' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e199' cx='470.05' cy='50.11' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e200' cx='425.01' cy='109.95' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e201' cx='455.03' cy='99.98' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e202' cx='387.48' cy='124.91' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e203' cx='455.03' cy='75.04' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e204' cx='319.92' cy='124.91' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e205' cx='410' cy='50.11' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e206' cx='394.98' cy='90' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e207' cx='417.5' cy='75.04' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e208' cx='304.91' cy='134.88' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e209' cx='410' cy='75.04' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e210' cx='327.43' cy='134.88' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e211' cx='492.56' cy='55.1' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e212' cx='289.9' cy='134.88' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e213' cx='455.03' cy='70.06' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e214' cx='319.92' cy='104.96' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e215' cx='507.58' cy='20.19' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e216' cx='364.96' cy='80.03' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e217' cx='515.08' cy='25.18' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e218' cx='357.45' cy='104.96' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e219' cx='530.1' cy='30.16' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e220' cx='364.96' cy='75.04' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e221' cx='492.56' cy='60.08' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e222' cx='372.47' cy='94.99' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e223' cx='410' cy='70.06' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e224' cx='425.01' cy='70.06' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e225' cx='440.02' cy='90' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e226' cx='364.96' cy='94.99' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e227' cx='530.1' cy='25.18' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e228' cx='349.95' cy='129.9' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e229' cx='560.12' cy='75.04' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e230' cx='372.47' cy='99.98' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e231' cx='552.61' cy='60.08' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e232' cx='353.7' cy='114.94' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e233' cx='477.55' cy='70.06' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e234' cx='368.71' cy='114.94' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e235' cx='462.54' cy='55.1' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e236' cx='372.47' cy='114.94' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e237' cx='500.07' cy='35.15' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e238' cx='349.95' cy='85.02' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e239' cx='455.03' cy='85.02' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e240' cx='391.23' cy='114.94' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e241' cx='492.56' cy='25.18' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e242' cx='402.49' cy='85.02' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e243' cx='470.05' cy='35.15' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e244' cx='372.47' cy='114.94' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e245' cx='507.58' cy='55.1' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e246' cx='387.48' cy='104.96' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e247' cx='440.02' cy='45.12' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e248' cx='398.74' cy='94.99' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e249' cx='391.23' cy='65.07' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e250' cx='353.7' cy='159.82' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e251' cx='447.53' cy='50.11' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e252' cx='387.48' cy='80.03' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e253' cx='500.07' cy='35.15' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e254' cx='406.24' cy='99.98' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e255' cx='485.06' cy='35.15' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e256' cx='368.71' cy='94.99' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e257' cx='485.06' cy='99.98' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e258' cx='364.96' cy='124.91' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e259' cx='485.06' cy='80.03' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e260' cx='346.19' cy='134.88' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e261' cx='485.06' cy='129.9' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e262' cx='410' cy='94.99' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e263' cx='552.61' cy='30.16' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e264' cx='357.45' cy='109.95' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e265' cx='485.06' cy='25.18' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e266' cx='316.17' cy='90' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e267' cx='537.6' cy='25.18' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e268' cx='391.23' cy='90' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e269' cx='560.12' cy='65.07' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e270' cx='398.74' cy='104.96' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e271' cx='387.48' cy='99.98' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e272' cx='522.59' cy='65.07' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e273' cx='440.02' cy='114.94' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e274' cx='470.05' cy='109.95' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e275' cx='184.81' cy='214.67' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e276' cx='244.86' cy='194.72' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e277' cx='207.33' cy='209.68' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e278' cx='188.56' cy='234.62' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e279' cx='218.59' cy='189.74' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e280' cx='252.37' cy='184.75' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e281' cx='147.28' cy='284.48' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e282' cx='222.34' cy='189.74' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e283' cx='282.39' cy='199.71' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e284' cx='214.83' cy='184.75' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e285' cx='229.85' cy='209.68' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e286' cx='226.09' cy='204.7' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e287' cx='214.83' cy='249.58' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e288' cx='267.38' cy='169.79' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e289' cx='196.07' cy='224.64' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e290' cx='267.38' cy='169.79' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e291' cx='154.79' cy='189.74' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e292' cx='214.83' cy='269.52' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e293' cx='177.3' cy='224.64' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e294' cx='319.92' cy='199.71' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e295' cx='199.82' cy='269.52' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e296' cx='169.8' cy='219.66' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e297' cx='94.74' cy='239.6' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e298' cx='229.85' cy='209.68' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e299' cx='154.79' cy='199.71' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e300' cx='282.39' cy='189.74' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2007' data-id='2007'/>\n   <circle id='svg_437eef02008402c0_e301' cx='169.8' cy='174.78' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e302' cx='229.85' cy='174.78' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e303' cx='214.83' cy='219.66' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e304' cx='342.44' cy='149.84' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e305' cx='139.77' cy='239.6' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e306' cx='304.91' cy='169.79' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e307' cx='162.29' cy='239.6' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e308' cx='274.88' cy='159.82' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e309' cx='199.82' cy='199.71' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e310' cx='244.86' cy='179.76' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e311' cx='237.35' cy='199.71' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e312' cx='379.97' cy='124.91' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e313' cx='64.71' cy='214.67' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e314' cx='334.93' cy='149.84' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e315' cx='252.37' cy='124.91' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e316' cx='207.33' cy='239.6' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e317' cx='192.32' cy='194.72' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e318' cx='184.81' cy='194.72' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2008' data-id='2008'/>\n   <circle id='svg_437eef02008402c0_e319' cx='211.08' cy='194.72' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e320' cx='327.43' cy='169.79' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e321' cx='169.8' cy='224.64' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e322' cx='304.91' cy='114.94' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e323' cx='147.28' cy='239.6' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e324' cx='211.08' cy='184.75' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e325' cx='158.54' cy='179.76' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e326' cx='252.37' cy='169.79' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e327' cx='199.82' cy='209.68' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e328' cx='267.38' cy='159.82' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e329' cx='162.29' cy='239.6' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e330' cx='177.3' cy='189.74' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e331' cx='147.28' cy='219.66' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e332' cx='267.38' cy='159.82' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e333' cx='229.85' cy='164.8' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e334' cx='188.56' cy='204.7' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e335' cx='252.37' cy='144.86' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e336' cx='207.33' cy='229.63' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e337' cx='207.33' cy='199.71' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e338' cx='259.87' cy='139.87' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e339' cx='169.8' cy='164.8' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e340' cx='226.09' cy='209.68' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e341' cx='274.88' cy='124.91' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <circle id='svg_437eef02008402c0_e342' cx='226.09' cy='184.75' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Year: 2009' data-id='2009'/>\n   <rect x='37.69' y='5.48' width='594.49' height='323.64' fill='none' stroke='#B3B3B3' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='round'/>\n  <\/g>\n  <g clip-path='url(#svg_437eef02008402c0_c1)'>\n   <text x='18.07' y='327.41' font-size='6.6pt' font-family='Liberation Sans' fill='#4D4D4D' fill-opacity='1'>170<\/text>\n   <text x='18.07' y='277.54' font-size='6.6pt' font-family='Liberation Sans' fill='#4D4D4D' fill-opacity='1'>180<\/text>\n   <text x='18.07' y='227.67' font-size='6.6pt' font-family='Liberation Sans' fill='#4D4D4D' fill-opacity='1'>190<\/text>\n   <text x='18.07' y='177.81' font-size='6.6pt' font-family='Liberation Sans' fill='#4D4D4D' fill-opacity='1'>200<\/text>\n   <text x='18.07' y='127.94' font-size='6.6pt' font-family='Liberation Sans' fill='#4D4D4D' fill-opacity='1'>210<\/text>\n   <text x='18.07' y='78.07' font-size='6.6pt' font-family='Liberation Sans' fill='#4D4D4D' fill-opacity='1'>220<\/text>\n   <text x='18.07' y='28.2' font-size='6.6pt' font-family='Liberation Sans' fill='#4D4D4D' fill-opacity='1'>230<\/text>\n   <polyline points='34.95,324.38 37.69,324.38' fill='none' stroke='#B3B3B3' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='34.95,274.51 37.69,274.51' fill='none' stroke='#B3B3B3' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='34.95,224.64 37.69,224.64' fill='none' stroke='#B3B3B3' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='34.95,174.78 37.69,174.78' fill='none' stroke='#B3B3B3' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='34.95,124.91 37.69,124.91' fill='none' stroke='#B3B3B3' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='34.95,75.04 37.69,75.04' fill='none' stroke='#B3B3B3' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='34.95,25.18 37.69,25.18' fill='none' stroke='#B3B3B3' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='109.75,331.86 109.75,329.12' fill='none' stroke='#B3B3B3' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='259.87,331.86 259.87,329.12' fill='none' stroke='#B3B3B3' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='410.00,331.86 410.00,329.12' fill='none' stroke='#B3B3B3' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='560.12,331.86 560.12,329.12' fill='none' stroke='#B3B3B3' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <text x='99.96' y='340.1' font-size='6.6pt' font-family='Liberation Sans' fill='#4D4D4D' fill-opacity='1'>3000<\/text>\n   <text x='250.08' y='340.1' font-size='6.6pt' font-family='Liberation Sans' fill='#4D4D4D' fill-opacity='1'>4000<\/text>\n   <text x='400.2' y='340.1' font-size='6.6pt' font-family='Liberation Sans' fill='#4D4D4D' fill-opacity='1'>5000<\/text>\n   <text x='550.33' y='340.1' font-size='6.6pt' font-family='Liberation Sans' fill='#4D4D4D' fill-opacity='1'>6000<\/text>\n   <text x='306.8' y='352.24' font-size='8.25pt' font-family='Liberation Sans'>body_mass<\/text>\n   <text transform='translate(13.05,192.68) rotate(-90.00)' font-size='8.25pt' font-family='Liberation Sans'>flipper_len<\/text>\n   <rect x='643.14' y='128.23' width='71.38' height='78.13' fill='#FFFFFF' fill-opacity='1' stroke='none'/>\n   <text x='648.62' y='142.42' font-size='8.25pt' font-family='Liberation Sans'>species<\/text>\n   <rect x='648.62' y='149.04' width='17.28' height='17.28' fill='#FFFFFF' fill-opacity='1' stroke='none'/>\n   <circle cx='657.26' cy='157.68' r='1.47pt' fill='#F8766D' fill-opacity='1' stroke='#F8766D' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round'/>\n   <rect x='648.62' y='166.32' width='17.28' height='17.28' fill='#FFFFFF' fill-opacity='1' stroke='none'/>\n   <circle cx='657.26' cy='174.96' r='1.47pt' fill='#00BA38' fill-opacity='1' stroke='#00BA38' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round'/>\n   <rect x='648.62' y='183.6' width='17.28' height='17.28' fill='#FFFFFF' fill-opacity='1' stroke='none'/>\n   <circle cx='657.26' cy='192.24' r='1.47pt' fill='#619CFF' fill-opacity='1' stroke='#619CFF' stroke-opacity='1' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round'/>\n   <text x='671.38' y='160.71' font-size='6.6pt' font-family='Liberation Sans'>Adelie<\/text>\n   <text x='671.38' y='177.99' font-size='6.6pt' font-family='Liberation Sans'>Chinstrap<\/text>\n   <text x='671.38' y='195.27' font-size='6.6pt' font-family='Liberation Sans'>Gentoo<\/text>\n  <\/g>\n <\/g>\n<\/svg>","js":null,"uid":"svg_437eef02008402c0","ratio":2,"settings":{"tooltip":{"css":".tooltip_SVGID_ { padding:5px;background:black;color:white;border-radius:2px;text-align:left; ; position:absolute;pointer-events:none;z-index:9999;}","placement":"doc","opacity":0.9,"offx":10,"offy":10,"use_cursor_pos":true,"use_fill":false,"use_stroke":false,"delay_over":200,"delay_out":500},"hover":{"css":".hover_data_SVGID_ { opacity:0.9 }","reactive":true,"nearest_distance":null,"linked":false},"hover_inv":{"css":".hover_inv_SVGID_ { opacity:0.3 }"},"hover_key":{"css":".hover_key_SVGID_ { fill:orange;stroke:black;cursor:pointer; }\ntext.hover_key_SVGID_ { stroke:none;fill:orange; }\ncircle.hover_key_SVGID_ { fill:orange;stroke:black; }\nline.hover_key_SVGID_, polyline.hover_key_SVGID_ { fill:none;stroke:orange; }\nrect.hover_key_SVGID_, polygon.hover_key_SVGID_, path.hover_key_SVGID_ { fill:orange;stroke:none; }\nimage.hover_key_SVGID_ { stroke:orange; }","reactive":true},"hover_theme":{"css":".hover_theme_SVGID_ { fill:orange;stroke:black;cursor:pointer; }\ntext.hover_theme_SVGID_ { stroke:none;fill:orange; }\ncircle.hover_theme_SVGID_ { fill:orange;stroke:black; }\nline.hover_theme_SVGID_, polyline.hover_theme_SVGID_ { fill:none;stroke:orange; }\nrect.hover_theme_SVGID_, polygon.hover_theme_SVGID_, path.hover_theme_SVGID_ { fill:orange;stroke:none; }\nimage.hover_theme_SVGID_ { stroke:orange; }","reactive":true},"select":{"css":".select_data_SVGID_ { fill:red;stroke:black;cursor:pointer; }\ntext.select_data_SVGID_ { stroke:none;fill:red; }\ncircle.select_data_SVGID_ { fill:red;stroke:black; }\nline.select_data_SVGID_, polyline.select_data_SVGID_ { fill:none;stroke:red; }\nrect.select_data_SVGID_, polygon.select_data_SVGID_, path.select_data_SVGID_ { fill:red;stroke:none; }\nimage.select_data_SVGID_ { stroke:red; }","type":"multiple","only_shiny":true,"selected":[],"linked":false},"select_inv":{"css":""},"select_key":{"css":".select_key_SVGID_ { fill:red;stroke:black;cursor:pointer; }\ntext.select_key_SVGID_ { stroke:none;fill:red; }\ncircle.select_key_SVGID_ { fill:red;stroke:black; }\nline.select_key_SVGID_, polyline.select_key_SVGID_ { fill:none;stroke:red; }\nrect.select_key_SVGID_, polygon.select_key_SVGID_, path.select_key_SVGID_ { fill:red;stroke:none; }\nimage.select_key_SVGID_ { stroke:red; }","type":"single","only_shiny":true,"selected":[]},"select_theme":{"css":".select_theme_SVGID_ { fill:red;stroke:black;cursor:pointer; }\ntext.select_theme_SVGID_ { stroke:none;fill:red; }\ncircle.select_theme_SVGID_ { fill:red;stroke:black; }\nline.select_theme_SVGID_, polyline.select_theme_SVGID_ { fill:none;stroke:red; }\nrect.select_theme_SVGID_, polygon.select_theme_SVGID_, path.select_theme_SVGID_ { fill:red;stroke:none; }\nimage.select_theme_SVGID_ { stroke:red; }","type":"single","only_shiny":true,"selected":[]},"zoom":{"min":1,"max":1,"duration":300,"default_on":false},"toolbar":{"position":"topright","pngname":"diagram","tooltips":null,"fixed":false,"hidden":[],"delay_over":200,"delay_out":500},"sizing":{"rescale":true,"width":1}}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</div></div>
+</section>
+<section id="interactive-tables-dt-extensions" class="slide level2 smaller">
+<h2>Interactive Tables: <code>DT</code> + Extensions</h2>
+<ul>
+<li><code>DT</code> extensions give more options for search, filtering, and export buttons.</li>
+<li>E.g. <code>SearchPanes</code> extension:</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">|&gt;</span></span>
+<span id="cb8-2"><a href="" aria-hidden="true" tabindex="-1"></a>  <span class="fu">datatable</span>(<span class="at">extensions =</span> <span class="fu">c</span>(<span class="st">'Select'</span>, <span class="st">'SearchPanes'</span>),</span>
+<span id="cb8-3"><a href="" aria-hidden="true" tabindex="-1"></a>              <span class="at">selection =</span> <span class="st">'none'</span>,</span>
+<span id="cb8-4"><a href="" aria-hidden="true" tabindex="-1"></a>              <span class="at">rownames =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb8-5"><a href="" aria-hidden="true" tabindex="-1"></a>              <span class="at">options =</span> <span class="fu">list</span>(<span class="at">dom =</span> <span class="st">'Prtip'</span>,</span>
+<span id="cb8-6"><a href="" aria-hidden="true" tabindex="-1"></a>                             <span class="at">searchPanes =</span> <span class="fu">list</span>(</span>
+<span id="cb8-7"><a href="" aria-hidden="true" tabindex="-1"></a>                               <span class="at">controls =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb8-8"><a href="" aria-hidden="true" tabindex="-1"></a>                               <span class="at">viewCount =</span> <span class="cn">FALSE</span></span>
+<span id="cb8-9"><a href="" aria-hidden="true" tabindex="-1"></a>                             ),</span>
+<span id="cb8-10"><a href="" aria-hidden="true" tabindex="-1"></a>                             <span class="at">columnDefs =</span> <span class="fu">list</span>(</span>
+<span id="cb8-11"><a href="" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">list</span>(<span class="at">searchPanes =</span> <span class="fu">list</span>(<span class="at">show =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb8-12"><a href="" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">targets =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>)</span>
+<span id="cb8-13"><a href="" aria-hidden="true" tabindex="-1"></a>                             ))</span>
+<span id="cb8-14"><a href="" aria-hidden="true" tabindex="-1"></a>            )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="interactive-tables-dt-extensions-1" class="slide level2 smaller">
+<h2>Interactive Tables: <code>DT</code> + Extensions</h2>
+<div style="font-size: 0.5em;">
+<div class="cell">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-d66403d84a048af7fb0a" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-d66403d84a048af7fb0a">{"x":{"filter":"none","vertical":false,"extensions":["Select","SearchPanes"],"data":[["Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Adelie","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Gentoo","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap","Chinstrap"],["Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Torgersen","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Biscoe","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream","Dream"],[39.1,39.5,40.3,null,36.7,39.3,38.9,39.2,34.1,42,37.8,37.8,41.1,38.6,34.6,36.6,38.7,42.5,34.4,46,37.8,37.7,35.9,38.2,38.8,35.3,40.6,40.5,37.9,40.5,39.5,37.2,39.5,40.9,36.4,39.2,38.8,42.2,37.6,39.8,36.5,40.8,36,44.1,37,39.6,41.1,37.5,36,42.3,39.6,40.1,35,42,34.5,41.4,39,40.6,36.5,37.6,35.7,41.3,37.6,41.1,36.4,41.6,35.5,41.1,35.9,41.8,33.5,39.7,39.6,45.8,35.5,42.8,40.9,37.2,36.2,42.1,34.6,42.9,36.7,35.1,37.3,41.3,36.3,36.9,38.3,38.9,35.7,41.1,34,39.6,36.2,40.8,38.1,40.3,33.1,43.2,35,41,37.7,37.8,37.9,39.7,38.6,38.2,38.1,43.2,38.1,45.6,39.7,42.2,39.6,42.7,38.6,37.3,35.7,41.1,36.2,37.7,40.2,41.4,35.2,40.6,38.8,41.5,39,44.1,38.5,43.1,36.8,37.5,38.1,41.1,35.6,40.2,37,39.7,40.2,40.6,32.1,40.7,37.3,39,39.2,36.6,36,37.8,36,41.5,46.1,50,48.7,50,47.6,46.5,45.4,46.7,43.3,46.8,40.9,49,45.5,48.4,45.8,49.3,42,49.2,46.2,48.7,50.2,45.1,46.5,46.3,42.9,46.1,44.5,47.8,48.2,50,47.3,42.8,45.1,59.6,49.1,48.4,42.6,44.4,44,48.7,42.7,49.6,45.3,49.6,50.5,43.6,45.5,50.5,44.9,45.2,46.6,48.5,45.1,50.1,46.5,45,43.8,45.5,43.2,50.4,45.3,46.2,45.7,54.3,45.8,49.8,46.2,49.5,43.5,50.7,47.7,46.4,48.2,46.5,46.4,48.6,47.5,51.1,45.2,45.2,49.1,52.5,47.4,50,44.9,50.8,43.4,51.3,47.5,52.1,47.5,52.2,45.5,49.5,44.5,50.8,49.4,46.9,48.4,51.1,48.5,55.9,47.2,49.1,47.3,46.8,41.7,53.4,43.3,48.1,50.5,49.8,43.5,51.5,46.2,55.1,44.5,48.8,47.2,null,46.8,50.4,45.2,49.9,46.5,50,51.3,45.4,52.7,45.2,46.1,51.3,46,51.3,46.6,51.7,47,52,45.9,50.5,50.3,58,46.4,49.2,42.4,48.5,43.2,50.6,46.7,52,50.5,49.5,46.4,52.8,40.9,54.2,42.5,51,49.7,47.5,47.6,52,46.9,53.5,49,46.2,50.9,45.5,50.9,50.8,50.1,49,51.5,49.8,48.1,51.4,45.7,50.7,42.5,52.2,45.2,49.3,50.2,45.6,51.9,46.8,45.7,55.8,43.5,49.6,50.8,50.2],[18.7,17.4,18,null,19.3,20.6,17.8,19.6,18.1,20.2,17.1,17.3,17.6,21.2,21.1,17.8,19,20.7,18.4,21.5,18.3,18.7,19.2,18.1,17.2,18.9,18.6,17.9,18.6,18.9,16.7,18.1,17.8,18.9,17,21.1,20,18.5,19.3,19.1,18,18.4,18.5,19.7,16.9,18.8,19,18.9,17.9,21.2,17.7,18.9,17.9,19.5,18.1,18.6,17.5,18.8,16.6,19.1,16.9,21.1,17,18.2,17.1,18,16.2,19.1,16.6,19.4,19,18.4,17.2,18.9,17.5,18.5,16.8,19.4,16.1,19.1,17.2,17.6,18.8,19.4,17.8,20.3,19.5,18.6,19.2,18.8,18,18.1,17.1,18.1,17.3,18.9,18.6,18.5,16.1,18.5,17.9,20,16,20,18.6,18.9,17.2,20,17,19,16.5,20.3,17.7,19.5,20.7,18.3,17,20.5,17,18.6,17.2,19.8,17,18.5,15.9,19,17.6,18.3,17.1,18,17.9,19.2,18.5,18.5,17.6,17.5,17.5,20.1,16.5,17.9,17.1,17.2,15.5,17,16.8,18.7,18.6,18.4,17.8,18.1,17.1,18.5,13.2,16.3,14.1,15.2,14.5,13.5,14.6,15.3,13.4,15.4,13.7,16.1,13.7,14.6,14.6,15.7,13.5,15.2,14.5,15.1,14.3,14.5,14.5,15.8,13.1,15.1,14.3,15,14.3,15.3,15.3,14.2,14.5,17,14.8,16.3,13.7,17.3,13.6,15.7,13.7,16,13.7,15,15.9,13.9,13.9,15.9,13.3,15.8,14.2,14.1,14.4,15,14.4,15.4,13.9,15,14.5,15.3,13.8,14.9,13.9,15.7,14.2,16.8,14.4,16.2,14.2,15,15,15.6,15.6,14.8,15,16,14.2,16.3,13.8,16.4,14.5,15.6,14.6,15.9,13.8,17.3,14.4,14.2,14,17,15,17.1,14.5,16.1,14.7,15.7,15.8,14.6,14.4,16.5,15,17,15.5,15,13.8,16.1,14.7,15.8,14,15.1,15.2,15.9,15.2,16.3,14.1,16,15.7,16.2,13.7,null,14.3,15.7,14.8,16.1,17.9,19.5,19.2,18.7,19.8,17.8,18.2,18.2,18.9,19.9,17.8,20.3,17.3,18.1,17.1,19.6,20,17.8,18.6,18.2,17.3,17.5,16.6,19.4,17.9,19,18.4,19,17.8,20,16.6,20.8,16.7,18.8,18.6,16.8,18.3,20.7,16.6,19.9,19.5,17.5,19.1,17,17.9,18.5,17.9,19.6,18.7,17.3,16.4,19,17.3,19.7,17.3,18.8,16.6,19.9,18.8,19.4,19.5,16.5,17,19.8,18.1,18.2,19,18.7],[181,186,195,null,193,190,181,195,193,190,186,180,182,191,198,185,195,197,184,194,174,180,189,185,180,187,183,187,172,180,178,178,188,184,195,196,190,180,181,184,182,195,186,196,185,190,182,179,190,191,186,188,190,200,187,191,186,193,181,194,185,195,185,192,184,192,195,188,190,198,190,190,196,197,190,195,191,184,187,195,189,196,187,193,191,194,190,189,189,190,202,205,185,186,187,208,190,196,178,192,192,203,183,190,193,184,199,190,181,197,198,191,193,197,191,196,188,199,189,189,187,198,176,202,186,199,191,195,191,210,190,197,193,199,187,190,191,200,185,193,193,187,188,190,192,185,190,184,195,193,187,201,211,230,210,218,215,210,211,219,209,215,214,216,214,213,210,217,210,221,209,222,218,215,213,215,215,215,216,215,210,220,222,209,207,230,220,220,213,219,208,208,208,225,210,216,222,217,210,225,213,215,210,220,210,225,217,220,208,220,208,224,208,221,214,231,219,230,214,229,220,223,216,221,221,217,216,230,209,220,215,223,212,221,212,224,212,228,218,218,212,230,218,228,212,224,214,226,216,222,203,225,219,228,215,228,216,215,210,219,208,209,216,229,213,230,217,230,217,222,214,null,215,222,212,213,192,196,193,188,197,198,178,197,195,198,193,194,185,201,190,201,197,181,190,195,181,191,187,193,195,197,200,200,191,205,187,201,187,203,195,199,195,210,192,205,210,187,196,196,196,201,190,212,187,198,199,201,193,203,187,197,191,203,202,194,206,189,195,207,202,193,210,198],[3750,3800,3250,null,3450,3650,3625,4675,3475,4250,3300,3700,3200,3800,4400,3700,3450,4500,3325,4200,3400,3600,3800,3950,3800,3800,3550,3200,3150,3950,3250,3900,3300,3900,3325,4150,3950,3550,3300,4650,3150,3900,3100,4400,3000,4600,3425,2975,3450,4150,3500,4300,3450,4050,2900,3700,3550,3800,2850,3750,3150,4400,3600,4050,2850,3950,3350,4100,3050,4450,3600,3900,3550,4150,3700,4250,3700,3900,3550,4000,3200,4700,3800,4200,3350,3550,3800,3500,3950,3600,3550,4300,3400,4450,3300,4300,3700,4350,2900,4100,3725,4725,3075,4250,2925,3550,3750,3900,3175,4775,3825,4600,3200,4275,3900,4075,2900,3775,3350,3325,3150,3500,3450,3875,3050,4000,3275,4300,3050,4000,3325,3500,3500,4475,3425,3900,3175,3975,3400,4250,3400,3475,3050,3725,3000,3650,4250,3475,3450,3750,3700,4000,4500,5700,4450,5700,5400,4550,4800,5200,4400,5150,4650,5550,4650,5850,4200,5850,4150,6300,4800,5350,5700,5000,4400,5050,5000,5100,4100,5650,4600,5550,5250,4700,5050,6050,5150,5400,4950,5250,4350,5350,3950,5700,4300,4750,5550,4900,4200,5400,5100,5300,4850,5300,4400,5000,4900,5050,4300,5000,4450,5550,4200,5300,4400,5650,4700,5700,4650,5800,4700,5550,4750,5000,5100,5200,4700,5800,4600,6000,4750,5950,4625,5450,4725,5350,4750,5600,4600,5300,4875,5550,4950,5400,4750,5650,4850,5200,4925,4875,4625,5250,4850,5600,4975,5500,4725,5500,4700,5500,4575,5500,5000,5950,4650,5500,4375,5850,4875,6000,4925,null,4850,5750,5200,5400,3500,3900,3650,3525,3725,3950,3250,3750,4150,3700,3800,3775,3700,4050,3575,4050,3300,3700,3450,4400,3600,3400,2900,3800,3300,4150,3400,3800,3700,4550,3200,4300,3350,4100,3600,3900,3850,4800,2700,4500,3950,3650,3550,3500,3675,4450,3400,4300,3250,3675,3325,3950,3600,4050,3350,3450,3250,4050,3800,3525,3950,3650,3650,4000,3400,3775,4100,3775],["male","female","female",null,"female","male","female","male",null,null,null,null,"female","male","male","female","female","male","female","male","female","male","female","male","male","female","male","female","female","male","female","male","female","male","female","male","male","female","female","male","female","male","female","male","female","male","male",null,"female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","male","female","male","female","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","male","female","female","male","female","male","female","male","female","male","male","female","female","male","female","male","female","male","female","male","female","male","female","male","female","male","male","female","female","male","female","male",null,"male","female","male","male","female","female","male","female","male","female","male","female","male","female","male","female","male","male","female","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male",null,"male","female","male","female","male","male","female","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","male","female","female","male","female","male","female","male",null,"male","female","male","female","male","female","male","female","male","female","male",null,"male","female",null,"female","male","female","male","female","male","male","female","male","female","female","male","female","male","female","male","female","male","female","male","male","female","female","male","female","male","female","male","female","male","female","male","female","male","female","male","female","male","male","female","female","male","female","male","male","female","male","female","female","male","female","male","male","female","female","male","female","male","female","male","female","male","male","female","male","female","female","male","female","male","male","female"],[2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>species<\/th>\n      <th>island<\/th>\n      <th>bill_len<\/th>\n      <th>bill_dep<\/th>\n      <th>flipper_len<\/th>\n      <th>body_mass<\/th>\n      <th>sex<\/th>\n      <th>year<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"Prtip","searchPanes":{"controls":false,"viewCount":false},"columnDefs":[{"searchPanes":{"show":false},"targets":[2,3,4,5,6]},{"className":"dt-right","targets":[2,3,4,5,7]},{"name":"species","targets":0},{"name":"island","targets":1},{"name":"bill_len","targets":2},{"name":"bill_dep","targets":3},{"name":"flipper_len","targets":4},{"name":"body_mass","targets":5},{"name":"sex","targets":6},{"name":"year","targets":7}],"pageLength":5,"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[5,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="thanks-any-questions" class="title-slide slide level1 center middle">
+<h1>Thanks! Any questions?</h1>
+<p>Slides and code examples available here:</p>
+<p><a href="https://www.github.com/Dylan-W-Lewis/interactive-reports-presentation">github.com/Dylan-W-Lewis/interactive-reports-presentation</a></p>
+</section>
+<section class="slide level2">
+
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="slides_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="slides_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="slides_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="slides_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="slides_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="slides_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="slides_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="slides_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="slides_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="slides_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'fade',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+            let selectedAnnoteEl;
+            const selectorForAnnotation = ( cell, annotation) => {
+              let cellAttr = 'data-code-cell="' + cell + '"';
+              let lineAttr = 'data-code-annotation="' +  annotation + '"';
+              const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+              return selector;
+            }
+            const selectCodeLines = (annoteEl) => {
+              const doc = window.document;
+              const targetCell = annoteEl.getAttribute("data-target-cell");
+              const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+              const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+              const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+              const lineIds = lines.map((line) => {
+                return targetCell + "-" + line;
+              })
+              let top = null;
+              let height = null;
+              let parent = null;
+              if (lineIds.length > 0) {
+                  //compute the position of the single el (top and bottom and make a div)
+                  const el = window.document.getElementById(lineIds[0]);
+                  top = el.offsetTop;
+                  height = el.offsetHeight;
+                  parent = el.parentElement.parentElement;
+                if (lineIds.length > 1) {
+                  const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+                  const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+                  height = bottom - top;
+                }
+                if (top !== null && height !== null && parent !== null) {
+                  // cook up a div (if necessary) and position it 
+                  let div = window.document.getElementById("code-annotation-line-highlight");
+                  if (div === null) {
+                    div = window.document.createElement("div");
+                    div.setAttribute("id", "code-annotation-line-highlight");
+                    div.style.position = 'absolute';
+                    parent.appendChild(div);
+                  }
+                  div.style.top = top - 2 + "px";
+                  div.style.height = height + 4 + "px";
+                  div.style.left = 0;
+                  let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+                  if (gutterDiv === null) {
+                    gutterDiv = window.document.createElement("div");
+                    gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                    gutterDiv.style.position = 'absolute';
+                    const codeCell = window.document.getElementById(targetCell);
+                    const gutter = codeCell.querySelector('.code-annotation-gutter');
+                    gutter.appendChild(gutterDiv);
+                  }
+                  gutterDiv.style.top = top - 2 + "px";
+                  gutterDiv.style.height = height + 4 + "px";
+                }
+                selectedAnnoteEl = annoteEl;
+              }
+            };
+            const unselectCodeLines = () => {
+              const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+              elementsIds.forEach((elId) => {
+                const div = window.document.getElementById(elId);
+                if (div) {
+                  div.remove();
+                }
+              });
+              selectedAnnoteEl = undefined;
+            };
+              // Handle positioning of the toggle
+          window.addEventListener(
+            "resize",
+            throttle(() => {
+              elRect = undefined;
+              if (selectedAnnoteEl) {
+                selectCodeLines(selectedAnnoteEl);
+              }
+            }, 10)
+          );
+          function throttle(fn, ms) {
+          let throttle = false;
+          let timer;
+            return (...args) => {
+              if(!throttle) { // first call gets through
+                  fn.apply(this, args);
+                  throttle = true;
+              } else { // all the others get throttled
+                  if(timer) clearTimeout(timer); // cancel #2
+                  timer = setTimeout(() => {
+                    fn.apply(this, args);
+                    timer = throttle = false;
+                  }, ms);
+              }
+            };
+          }
+            const annoteTargets = window.document.querySelectorAll('.code-annotation-anchor');
+            for (let i=0; i<annoteTargets.length; i++) {
+              const annoteTarget = annoteTargets[i];
+              const targetCell = annoteTarget.getAttribute("data-target-cell");
+              const targetAnnotation = annoteTarget.getAttribute("data-target-annotation");
+              const contentFn = () => {
+                const content = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+                if (content) {
+                  const tipContent = content.cloneNode(true);
+                  tipContent.classList.add("code-annotation-tip-content");
+                  return tipContent.outerHTML;
+                }
+              }
+              const config = {
+                allowHTML: true,
+                content: contentFn,
+                onShow: (instance) => {
+                  selectCodeLines(instance.reference);
+                  instance.reference.classList.add('code-annotation-active');
+                  window.tippy.hideAll();
+                },
+                onHide: (instance) => {
+                  unselectCodeLines();
+                  instance.reference.classList.remove('code-annotation-active');
+                },
+                maxWidth: 300,
+                delay: [50, 0],
+                duration: [200, 0],
+                offset: [5, 10],
+                arrow: true,
+                trigger: 'click',
+                appendTo: function(el) {
+                  return el.parentElement.parentElement.parentElement;
+                },
+                interactive: true,
+                interactiveBorder: 10,
+                theme: 'light-border',
+                placement: 'right',
+                positionFixed: true,
+                popperOptions: {
+                  modifiers: [
+                  {
+                    name: 'flip',
+                    options: {
+                      flipVariations: false, // true by default
+                      allowedAutoPlacements: ['right'],
+                      fallbackPlacements: ['right', 'top', 'top-start', 'top-end', 'bottom', 'bottom-start', 'bottom-end', 'left'],
+                    },
+                  },
+                  {
+                    name: 'preventOverflow',
+                    options: {
+                      mainAxis: false,
+                      altAxis: false
+                    }
+                  }
+                  ]        
+                }      
+              };
+              window.tippy(annoteTarget, config); 
+            }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

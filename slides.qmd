@@ -144,20 +144,24 @@ params:                       # <4>
 
 ::: {.column width="70%"}
 ```{YAML}
+---
 title: Penguin report
 subtitle: `r paste(params$location, params$year)`
-format:
+output:
   html:
     toc: true                 # <1>
     self-contained: true      # <2>
-knitr:                        # <3>
-  opts_chunk:                 # <3>
-    echo: false               # <3>                 
-    message: false            # <3>  
-    warning: false            # <3>
 params:                       # <4>
   location: "Torgersen"       # <4>       
-  year: 2008                  # <4>       
+  year: 2008                  # <4> 
+---
+
+{r include=FALSE}        
+knitr::opts_chunk$set(
+  echo =  FALSE,              # <3>
+  message = FALSE,            # <3>
+  warning = FALSE             # <3>
+) 
 ```
 
 1. Table of contents (further options can control position and appearance)
@@ -191,7 +195,7 @@ params:                       # <4>
 
 ## Example Styled Quarto YAML {.smaller}
 
-![](quarto_header.png){width=100%, fig-align="center"}
+![](img/quarto_header.png){width=100%, fig-align="center"}
 
 ```{YAML}
 title: MTC patient residence & incident location
@@ -275,7 +279,7 @@ page_navbar(
 :::
 
 ::: {.column width="50%"}
-![](bslib_html.png)
+![](img/bslib_html.png)
 :::
 
 ::::
@@ -341,7 +345,7 @@ navset_pill(
 
 ::: {.column width="50%"}
 
-![](nav_pill.png)
+![](img/nav_pill.png)
 :::
 ::::
 
@@ -430,7 +434,7 @@ penguins |>
                                list(searchPanes = list(show = FALSE),
                                     targets = 2:6)
                              ),
-                             pageLenth = 5)
+                             pageLength = 5)
             )
 ```
 :::
