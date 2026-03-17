@@ -22,6 +22,7 @@ library(bslib)
 library(dplyr)
 library(ggplot2)
 library(ggiraph)
+library(DT)
 ```
 
 ## Context: Reporting Constraints in PHS
@@ -265,11 +266,46 @@ girafe(plot)                           # <4>
 ::::
 ------------------------------------------------------------------------
 
-## Interactive Tables: `DT` + Extensions
+## Interactive Tables: `DT` + Extensions {.smaller}
 
--   Search, filtering, and export buttons.
--   Fixed headers and large-table handling.
--   Data download options. <!-- mention downloadthis as alternative -->
+-   `DT` extensions give more options for search, filtering, and export buttons.
+-   E.g. `SearchPanes` extension:
+```{r}
+penguins |>
+  datatable(extensions = c('Select', 'SearchPanes'),
+              selection = 'none',
+              rownames = FALSE,
+              options = list(dom = 'Prtip',
+                             searchPanes = list(
+                               controls = FALSE,
+                               viewCount = FALSE
+                             ),
+                             columnDefs = list(
+                               list(searchPanes = list(show = FALSE),
+                                    targets = 2:6)
+                             ))
+            )
+```
+------------------------------------------------------------------------
+
+## Interactive Tables: `DT` + Extensions {.smaller}
+
+```{r eval=true, echo=FALSE}
+penguins |>
+  datatable(extensions = c('Select', 'SearchPanes'),
+              selection = 'none',
+              rownames = FALSE,
+              options = list(dom = 'Prtip',
+                             searchPanes = list(
+                               controls = FALSE,
+                               viewCount = FALSE
+                             ),
+                             columnDefs = list(
+                               list(searchPanes = list(show = FALSE),
+                                    targets = 2:6)
+                             ))
+            )
+```
 
 ------------------------------------------------------------------------
 
@@ -285,6 +321,7 @@ page_fluid(
 )
 ```
 
+-   Allows more complex layouts, multiple pages, etc
 -   Trade‑offs: control vs authoring convenience.
 
 ------------------------------------------------------------------------
@@ -347,10 +384,3 @@ img_base64 <- function(path, ...) {
 gdtools::addGFontHtmlDependency(family = "Open Sans")
 ```
 -   `htmlwidgets::saveWidget()` works in some cases, but I have a custom `save_self_contained_html()` function that I'm happy to share
-
-------------------------------------------------------------------------
-
-## Recommended Templates & Starter Kits
-
--   Quarto parameterised report template (bslib + ggiraph + DT).
--   Pure HTML (`bslib` + `htmltools`) template.
